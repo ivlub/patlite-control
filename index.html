@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>PATLITE</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        div, select, input, button { margin: 5px; }
+        .tower { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
+        .tower label, .tower select, .tower input { display: block; }
+        .miniMargin {
+            margin: 0px;
+        }
+        .colorsDiv {
+            margin-bottom: 7px;
+            
+        }
+        .colorsDiv select {
+            border: 1px solid black; background-color: transparent;
+        }
+    .color-option-0 { background-color: #ffffff; /* Off/White for visibility */ }
+    .color-option-1 { background-color: #ff0000; } /* Red */
+    .color-option-2 { background-color: #ffbf00; } /* Amber */
+    .color-option-3 { background-color: #ffff00; } /* Lemon */
+    .color-option-4 { background-color: #00ff00; } /* Green */
+    .color-option-5 { background-color: #00ffff; } /* Sky Blue */
+    .color-option-6 { background-color: #0000ff; } /* Blue */
+    .color-option-7 { background-color: #800080; } /* Purple */
+    .color-option-8 { background-color: #ff00ff; } /* Pink */
+    .color-option-9 { background-color: #ffffff; } /* White */
+    select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; 
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+    .opButtons {
+        display: flex;
+        flex-direction: column;
+    }
+    .opButtons button {
+        background-color: #fe0000;
+        border: 1px solid transparent;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.5s ease;
+        border-radius:8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        font-size: 14px;
+    }
+    .opButtons button:hover {
+        background-color: white;
+        border: 1px solid #fe0000;
+        color: #fe0000;
+        cursor: pointer;
+    }
+    .connectButton {
+        background-color: #fe0000;
+        border: 1px solid transparent;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        transition: background-color 0.5s ease;
+        border-radius:8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .connectButton:hover {
+        background-color: white;
+        border: 1px solid #fe0000;
+        color: #fe0000;
+        cursor: pointer;
+    }
+    .inputText {
+    background-color: white; 
+    border: 1px solid #fe0000;
+    color: black; 
+    padding: 15px 32px; 
+    text-align: center; 
+    font-size: 16px;
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: inline-block; 
+    }
+    .inputText:focus {
+       outline:none;
+    }
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0; 
+        z-index: 1000; 
+    }
+    .logo img {
+        height: 40px; 
+        width: auto; 
+        margin-left: 15px;
+}
+.buzzerPattern {
+    background-color: white;
+    border: 1px solid #fe0000;
+}
+
+#towersContainer {
+    display:flex;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+.tower {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    margin-right: 20px; 
+    flex: 0 0 auto;
+    width: 200px;
+    border: 1px solid #fe0000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+}
+.tower select {
+    width: 100%;
+    box-sizing: border-box; 
+}
+
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #555;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+}
+
+.custom-checkbox:checked {
+  background-color: #fe0000;
+  border-color: #fe0000;
+}
+
+.custom-checkbox + label {
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+</style>
+
+    </style>
+</head>
+<body>
+    <!--Header - Logo and Adding Towers-->
+    <div class="navbar">
+      <div class="logo"><img src="https://www.patlite.eu/_img2/base/site-logo.svg" alt="Logo"></div>
+      <div id="addTower">
+        <input class="inputText" type="text" id="newTowerIP" placeholder="Bitte IP Addresse eingeben.">
+        <button class="connectButton" id="addNewTower">Verbinden<i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i></button>
+    </div>
+    </div>
+   
+
+    <div id="towersContainer"></div>
+
+    <script>
+      function sendTowerCommand(apiEndpoint) {
+    fetch(apiEndpoint)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(data => console.log('Command sent successfully:', data))
+        .catch(error => console.error('Error sending command:', error));
+}
+//receives the ipadress and the paramaters map
+function constructApiEndpoint(ipAddress, parameters) {
+    // Construct the color value string from the tier selections
+    const colorValue = new String(Object.values(parameters).slice(0, 5).join(''));
+    // Update parameters object with the constructed colorValue and remove individual tier parameters
+    parameters = {
+        color: colorValue,
+        flash: parameters.flash,
+        buzzer: parameters.buzzer
+    };
+    let baseUrl = `http://${ipAddress}/api/control?`;
+    let queryString = Object.keys(parameters).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(parameters[key])}`).join('&');
+    return baseUrl + queryString;
+}
+
+//add a tower
+function addTowerControls(ipAddress) {
+    const towerDiv = document.createElement('div');
+    towerDiv.classList.add('tower');
+    towerDiv.innerHTML = `
+        <h2 style="color: #fe0000">${ipAddress}</h2>
+       
+<!-- Color Selection -->
+<div class="colorsDiv">
+<select class="miniMargin" id="colorTier1" name="colorTier1" onchange="changeBackgroundColor(this)">
+    <option value="0" class="color-option-0">Farbe wählen</option> <!-- Default option -->
+    <option value="1" class="color-option-1">Red</option>
+    <option value="2" class="color-option-2">Amber</option>
+    <option value="3" class="color-option-3">Lemon</option>
+    <option value="4" class="color-option-4">Green</option>
+    <option value="5" class="color-option-5">Sky Blue</option>
+    <option value="6" class="color-option-6">Blue</option>
+    <option value="7" class="color-option-7">Purple</option>
+    <option value="8" class="color-option-8">Pink</option>
+    <option value="9" class="color-option-9">White</option>
+</select>
+
+
+
+<select class="miniMargin" id="colorTier2" name="colorTier2"  onchange="changeBackgroundColor(this)">>
+    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="1" class="color-option-1">Red</option>
+    <option value="2" class="color-option-2">Amber</option>
+    <option value="3" class="color-option-3">Lemon</option>
+    <option value="4" class="color-option-4">Green</option>
+    <option value="5" class="color-option-5">Sky Blue</option>
+    <option value="6" class="color-option-6">Blue</option>
+    <option value="7" class="color-option-7">Purple</option>
+    <option value="8" class="color-option-8">Pink</option>
+    <option value="9" class="color-option-9">White</option>
+</select>
+
+<select class="miniMargin" id="colorTier3" name="colorTier3"  onchange="changeBackgroundColor(this)">>
+    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="1" class="color-option-1">Red</option>
+    <option value="2" class="color-option-2">Amber</option>
+    <option value="3" class="color-option-3">Lemon</option>
+    <option value="4" class="color-option-4">Green</option>
+    <option value="5" class="color-option-5">Sky Blue</option>
+    <option value="6" class="color-option-6">Blue</option>
+    <option value="7" class="color-option-7">Purple</option>
+    <option value="8" class="color-option-8">Pink</option>
+    <option value="9" class="color-option-9">White</option>
+</select>
+
+<select class="miniMargin" id="colorTier4" name="colorTier4"  onchange="changeBackgroundColor(this)">>
+    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="1" class="color-option-1">Red</option>
+    <option value="2" class="color-option-2">Amber</option>
+    <option value="3" class="color-option-3">Lemon</option>
+    <option value="4" class="color-option-4">Green</option>
+    <option value="5" class="color-option-5">Sky Blue</option>
+    <option value="6" class="color-option-6">Blue</option>
+    <option value="7" class="color-option-7">Purple</option>
+    <option value="8" class="color-option-8">Pink</option>
+    <option value="9" class="color-option-9">White</option>
+</select>
+
+<select class="miniMargin"  id="colorTier5" name="colorTier5"  onchange="changeBackgroundColor(this)">>
+    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="1" class="color-option-1">Red</option>
+    <option value="2" class="color-option-2">Amber</option>
+    <option value="3" class="color-option-3">Lemon</option>
+    <option value="4" class="color-option-4">Green</option>
+    <option value="5" class="color-option-5">Sky Blue</option>
+    <option value="6" class="color-option-6">Blue</option>
+    <option value="7" class="color-option-7">Purple</option>
+    <option value="8" class="color-option-8">Pink</option>
+    <option value="9" class="color-option-9">White</option>
+</select>
+</div>
+
+
+<!-- Flashing Toggle -->
+<div style="display: flex; flex-direction: row; align-items: center;">
+  <input type="checkbox" id="flashing" name="flashing" class="custom-checkbox">
+  <label for="flashing">Flashing</label>
+</div>
+
+
+
+<!-- Buzzer Select -->
+<label for="buzzer"></i><i class="fa-regular fa-file-audio" style="margin-right: 5px;"></i>Buzzer Pattern:</label>
+<select  class="buzzerPattern" id="buzzer" name="buzzer">
+    <option value="0">0 (Aus)</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+</select>
+
+<div class="opButtons">
+<!-- Send Command Button -->
+<button id="sendCommand">Befehl Senden</button>
+<!-- Clear Command Button -->
+<button id="clearCommand">Befehl Löschen</button>
+<!-- Delete Tower Button -->
+<button class="removeTower">Säule entfernen</button>
+</div>
+
+    `;
+    document.getElementById('towersContainer').appendChild(towerDiv);
+    //removing a tower
+    towerDiv.querySelector('.removeTower').addEventListener('click', function() {
+        towerDiv.remove(); // This will remove the towerDiv from the DOM
+    });
+
+    //extracting parameters from the tower
+    towerDiv.querySelector('#sendCommand').addEventListener('click', function() {
+        //parameters "hashmap"
+        let parameters = {
+            //all the colors
+            colorTier1: towerDiv.querySelector('#colorTier1').value,
+            colorTier2: towerDiv.querySelector('#colorTier2').value,
+            colorTier3: towerDiv.querySelector('#colorTier3').value,
+            colorTier4: towerDiv.querySelector('#colorTier4').value,
+            colorTier5: towerDiv.querySelector('#colorTier5').value,
+            //check if flashing was checked or not
+            flash: towerDiv.querySelector('#flashing').checked ? 1 : 0,
+            //buzzer level 
+            buzzer: towerDiv.querySelector('#buzzer').value
+        };
+        //make apiEndPoint using the IP and the parameters "hashmap"
+        let apiEndpoint = constructApiEndpoint(ipAddress, parameters);
+        //send the command
+        sendTowerCommand(apiEndpoint);
+    });
+
+    //clear command.
+    towerDiv.querySelector('#clearCommand').addEventListener('click', function() {
+        sendTowerCommand(`http://${ipAddress}/api/control?clear=1`);
+    });
+}
+
+//eventlistener for adding
+document.getElementById('addNewTower').addEventListener('click', function() {
+    const newTowerIP = document.getElementById('newTowerIP').value.trim();
+    //check if it is a valid ipv4 address using function validIP
+    if (validIP(newTowerIP)) {
+        addTowerControls(newTowerIP);
+        document.getElementById('newTowerIP').value = ''; // Clear the input field after adding
+    } else {
+        alert('Bitte geben Sie eine gültige IP-Adresse ein!');
+    }
+});
+//function that checks if a given ip address is valid using regex
+    function validIP(newTowerIP) {
+    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(newTowerIP)) {  
+        return (true)  
+    }  
+    alert("Sie haben eine ungültige IP-Adresse eingegeben!")  
+    return (false)  
+    }  
+
+    // Background color of color selects
+    function changeBackgroundColor(selectElement) {
+    // Define a mapping of option values to background colors
+    var colorMap = {
+        "0": "transparent", // Default, no selection
+        "1": "#ff0000", // Red
+        "2": "#ffbf00", // Amber
+        "3": "#ffff00", // Lemon
+        "4": "#00ff00", // Green
+        "5": "#00ffff", // Sky Blue
+        "6": "#0000ff", // Blue
+        "7": "#800080", // Purple
+        "8": "#ff00ff", // Pink
+        "9": "#ffffff" // White
+    };
+
+    // Get the selected option value
+    var selectedValue = selectElement.value;
+
+    // Set the select element's background color based on the selected option value
+    selectElement.style.backgroundColor = colorMap[selectedValue];
+}
+    </script>
+</body>
+</html>
