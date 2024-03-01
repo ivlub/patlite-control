@@ -196,8 +196,8 @@
     <div class="navbar">
       <div class="logo"><img src="logo.svg" alt="Logo"></div>
       <div id="addTower">
-        <input class="inputText" type="text" id="newTowerIP" placeholder="Bitte IP Addresse eingeben.">
-        <button class="connectButton" id="addNewTower">Verbinden<i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i></button>
+        <input class="inputText" type="text" id="newTowerIP" placeholder="Please enter an IP address.">
+        <button class="connectButton" id="addNewTower">Connect<i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i></button>
     </div>
     </div>
    
@@ -246,7 +246,7 @@ function addTowerControls(ipAddress) {
 <div class="colorsDiv">
     <div class="color-and-flash">
 <select class="miniMargin" id="colorTier1" name="colorTier1" onchange="changeBackgroundColor(this)">
-    <option value="0" class="color-option-0">Farbe wählen</option> <!-- Default option -->
+    <option value="0" class="color-option-0">Pick color</option> <!-- Default option -->
     <option value="1" class="color-option-1">Red</option>
     <option value="2" class="color-option-2">Amber</option>
     <option value="3" class="color-option-3">Lemon</option>
@@ -267,7 +267,7 @@ function addTowerControls(ipAddress) {
 
 <div class="color-and-flash">
 <select class="miniMargin" id="colorTier2" name="colorTier2"  onchange="changeBackgroundColor(this)">>
-    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="0" selected>Pick color</option> <!-- Default option -->
     <option value="1" class="color-option-1">Red</option>
     <option value="2" class="color-option-2">Amber</option>
     <option value="3" class="color-option-3">Lemon</option>
@@ -287,7 +287,7 @@ function addTowerControls(ipAddress) {
 
 <div class="color-and-flash">
 <select class="miniMargin" id="colorTier3" name="colorTier3"  onchange="changeBackgroundColor(this)">>
-    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="0" selected>Pick color</option> <!-- Default option -->
     <option value="1" class="color-option-1">Red</option>
     <option value="2" class="color-option-2">Amber</option>
     <option value="3" class="color-option-3">Lemon</option>
@@ -308,7 +308,7 @@ function addTowerControls(ipAddress) {
 
 <div class="color-and-flash">
 <select class="miniMargin" id="colorTier4" name="colorTier4"  onchange="changeBackgroundColor(this)">>
-    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="0" selected>Pick color</option> <!-- Default option -->
     <option value="1" class="color-option-1">Red</option>
     <option value="2" class="color-option-2">Amber</option>
     <option value="3" class="color-option-3">Lemon</option>
@@ -328,7 +328,7 @@ function addTowerControls(ipAddress) {
 
 <div class="color-and-flash">
 <select class="miniMargin"  id="colorTier5" name="colorTier5"  onchange="changeBackgroundColor(this)">>
-    <option value="0" selected>Farbe wählen</option> <!-- Default option -->
+    <option value="0" selected>Pick color</option> <!-- Default option -->
     <option value="1" class="color-option-1">Red</option>
     <option value="2" class="color-option-2">Amber</option>
     <option value="3" class="color-option-3">Lemon</option>
@@ -353,7 +353,7 @@ function addTowerControls(ipAddress) {
 <!-- Buzzer Select -->
 <label for="buzzer"></i><i class="fa-regular fa-file-audio" style="margin-right: 5px;"></i>Buzzer Pattern:</label>
 <select  class="buzzerPattern" id="buzzer" name="buzzer">
-    <option value="0">0 (Aus)</option>
+    <option value="0">0 (Off)</option>
     <option value="1">1</option>
     <option value="2">2</option>
     <option value="3">3</option>
@@ -369,11 +369,11 @@ function addTowerControls(ipAddress) {
 
 <div class="opButtons">
 <!-- Send Command Button -->
-<button id="sendCommand">Befehl Senden</button>
+<button id="sendCommand">Send command</button>
 <!-- Clear Command Button -->
-<button id="clearCommand">Befehl Löschen</button>
+<button id="clearCommand">Clear command</button>
 <!-- Delete Tower Button -->
-<button class="removeTower">Säule entfernen</button>
+<button class="removeTower">Remove tower</button>
 </div>
 
 
@@ -423,7 +423,7 @@ document.getElementById('addNewTower').addEventListener('click', function() {
         addTowerControls(newTowerIP);
         document.getElementById('newTowerIP').value = ''; // Clear the input field after adding
     } else {
-        alert('Bitte geben Sie eine gültige IP-Adresse ein!');
+        alert('Please enter a valid IP address!');
     }
 });
 //function that checks if a given ip address is valid using regex
@@ -431,7 +431,7 @@ document.getElementById('addNewTower').addEventListener('click', function() {
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(newTowerIP)) {  
         return (true)  
     }  
-    alert("Sie haben eine ungültige IP-Adresse eingegeben!")  
+    alert("You have entered an invalid IP address!")  
     return (false)  
     }  
 
